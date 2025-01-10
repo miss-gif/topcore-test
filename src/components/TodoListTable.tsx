@@ -10,9 +10,8 @@ import { Button } from "./ui/button";
 
 interface ITodoListTable {
   tasks: IInitData[];
-  setTasks: (value: IInitData[]) => void;
   isAddTask: boolean;
-  setIsAddTask: (value: boolean) => void;
+  handleCloseAddTask: () => void;
   addNewTask: (taskName: string, taskStatus: IInitData["status"]) => void;
   updateTask: (
     id: string,
@@ -25,7 +24,7 @@ interface ITodoListTable {
 const TodoListTable = ({
   tasks,
   isAddTask,
-  setIsAddTask,
+  handleCloseAddTask,
   addNewTask,
   updateTask,
   deleteTask,
@@ -33,15 +32,16 @@ const TodoListTable = ({
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [editTaskName, setEditTaskName] = useState<string>("");
   const [editTaskStatus, setEditTaskStatus] = useState<IInitData["status"]>("");
-
   const [openModalTaskId, setOpenModalTaskId] = useState<string | null>(null);
 
+  // 수정 기능 추가
   const handleEditTask = (task: IInitData) => {
     setEditingTaskId(task.id);
     setEditTaskName(task.name);
     setEditTaskStatus(task.status);
   };
 
+  // 저장 기능 추가
   const handleSaveEdit = () => {
     if (editingTaskId) {
       updateTask(editingTaskId, editTaskName, editTaskStatus);
@@ -49,6 +49,7 @@ const TodoListTable = ({
     }
   };
 
+  // 취소 기능
   const handleCancelEdit = () => {
     setEditingTaskId(null);
   };
@@ -136,11 +137,12 @@ const TodoListTable = ({
                     <Button
                       size="icon"
                       variant="ghost"
-                      onClick={() =>
+                      onClick={() => {
                         setOpenModalTaskId(
                           openModalTaskId === task.id ? null : task.id
-                        )
-                      }
+                        );
+                        handleCloseAddTask();
+                      }}
                     >
                       <Settings />
                     </Button>
@@ -159,7 +161,10 @@ const TodoListTable = ({
             </TableRow>
           ))}
           {isAddTask && (
-            <AddTask setIsAddTask={setIsAddTask} addNewTask={addNewTask} />
+            <AddTask
+              handleCloseAddTask={handleCloseAddTask}
+              addNewTask={addNewTask}
+            />
           )}
         </TableBody>
       </Table>

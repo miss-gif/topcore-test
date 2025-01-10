@@ -11,37 +11,40 @@ import { Button } from "./ui/button";
 import { IInitData } from "@/types/type";
 
 interface AddTaskProps {
-  setIsAddTask: (isAddTask: boolean) => void;
+  handleCloseAddTask: () => void;
   addNewTask: (taskName: string, taskStatus: IInitData["status"]) => void;
 }
 
-const AddTask = ({ setIsAddTask, addNewTask }: AddTaskProps) => {
+const AddTask = ({ handleCloseAddTask, addNewTask }: AddTaskProps) => {
   const [taskName, setTaskName] = useState("");
   const [taskStatus, setTaskStatus] = useState<IInitData["status"] | string>(
     ""
   );
+
+  // 유효성 검사
   const isTaskNameValid = taskName.trim().length > 0 && taskName.length <= 40;
+  // 상태 선택 여부
   const isStatusSelected = taskStatus !== "";
+  // 유효성 검사 결과
   const isFormValid = isTaskNameValid && isStatusSelected;
 
+  // 저장 버튼 클릭시, 유효성 검사 후, 데이터 추가
   const handleAddTask = () => {
     if (isFormValid) {
       addNewTask(taskName.trim(), taskStatus as IInitData["status"]);
-      setIsAddTask(false);
+      handleCloseAddTask();
     }
-    console.log("Task Name: ", taskName);
-    console.log("Task Name: ", taskStatus);
   };
 
+  // 글쓰기 모드에서 취소버튼 눌렀을때, 값 비우고 모드 종료
   const handleCancel = () => {
     setTaskName("");
     setTaskStatus("");
-    setIsAddTask(false);
+    handleCloseAddTask();
   };
 
   return (
     <TableRow>
-      {/* 취소 버튼 */}
       <TableCell className="text-center">
         <Button onClick={handleCancel} className="text-xs">
           취소
