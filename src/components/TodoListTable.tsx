@@ -1,7 +1,7 @@
 import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { IInitData } from "@/types/type";
 import { Settings } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import AddTask from "./AddTask";
 import ConfigModal from "./ConfigModal";
 import TodoTableHeader from "./TodoListTable/TodoTableHeader";
@@ -19,6 +19,10 @@ interface ITodoListTable {
     newStatus: IInitData["status"]
   ) => void;
   deleteTask: (id: string) => void;
+  editingTaskId: string | null;
+  setEditingTaskId: (id: string | null) => void;
+  openModalTaskId: string | null;
+  setOpenModalTaskId: (id: string | null) => void;
 }
 
 const TodoListTable = ({
@@ -28,11 +32,30 @@ const TodoListTable = ({
   addNewTask,
   updateTask,
   deleteTask,
+  editingTaskId,
+  setEditingTaskId,
+  openModalTaskId,
+  setOpenModalTaskId,
 }: ITodoListTable) => {
-  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [editTaskName, setEditTaskName] = useState<string>("");
   const [editTaskStatus, setEditTaskStatus] = useState<IInitData["status"]>("");
-  const [openModalTaskId, setOpenModalTaskId] = useState<string | null>(null);
+  const modalRef = useRef<HTMLDivElement | null>(null);
+
+  // useEffect(() => {
+  //   const handleClickOutside = (event: MouseEvent) => {
+  //     if (
+  //       modalRef.current &&
+  //       !modalRef.current.contains(event.target as Node)
+  //     ) {
+  //       setOpenModalTaskId(null);
+  //     }
+  //   };
+
+  //   document.addEventListener("mousedown", handleClickOutside);
+  //   return () => {
+  //     document.removeEventListener("mousedown", handleClickOutside);
+  //   };
+  // }, [setOpenModalTaskId]);
 
   // 수정 기능 추가
   const handleEditTask = (task: IInitData) => {
@@ -52,6 +75,7 @@ const TodoListTable = ({
   // 취소 기능
   const handleCancelEdit = () => {
     setEditingTaskId(null);
+    setOpenModalTaskId(null);
   };
 
   const taskStatusColor = {
@@ -144,11 +168,15 @@ const TodoListTable = ({
                         handleCloseAddTask();
                       }}
                     >
-                      <Settings />
+                      <Settings
+                        className={`${
+                          openModalTaskId === task.id && "text-blue-500"
+                        }`}
+                      />
                     </Button>
                   </TableCell>
                   {openModalTaskId === task.id && (
-                    <div className="fixed">
+                    <div ref={modalRef} className="absolute -my-2 right-28">
                       <ConfigModal
                         task={task}
                         handleEditTask={handleEditTask}

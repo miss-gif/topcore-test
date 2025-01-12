@@ -7,9 +7,14 @@ const useTodo = () => {
   const [isAddTask, setIsAddTask] = useState(false); // AddTask 모드 상태
   const taskIdRef = useRef(4);
 
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const [openModalTaskId, setOpenModalTaskId] = useState<string | null>(null);
+
   // AddTask 모드로 변경
   const handleOpenAddTask = () => {
     setIsAddTask(true);
+    setOpenModalTaskId(null);
+    setEditingTaskId(null);
   };
 
   // AddTask 모드 닫기
@@ -58,6 +63,10 @@ const useTodo = () => {
     setIsAddTask,
     handleOpenAddTask,
     handleCloseAddTask,
+    editingTaskId,
+    setEditingTaskId,
+    openModalTaskId,
+    setOpenModalTaskId,
   };
 };
 

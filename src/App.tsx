@@ -11,6 +11,10 @@ const App = () => {
     isAddTask,
     handleOpenAddTask,
     handleCloseAddTask,
+    editingTaskId,
+    setEditingTaskId,
+    openModalTaskId,
+    setOpenModalTaskId,
   } = useTodo();
 
   return (
@@ -28,6 +32,10 @@ const App = () => {
         addNewTask={addNewTask}
         updateTask={updateTask} // 수정 기능 추가
         deleteTask={deleteTask} // 삭제 기능 추가
+        editingTaskId={editingTaskId}
+        setEditingTaskId={setEditingTaskId}
+        openModalTaskId={openModalTaskId}
+        setOpenModalTaskId={setOpenModalTaskId}
       />
     </div>
   );

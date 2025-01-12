@@ -19,7 +19,7 @@ interface IRemoveModal {
 const RemoveModal = ({ label, deleteTask, task }: IRemoveModal) => {
   return (
     <Dialog>
-      <DialogTrigger className="bg-red-500 text-white p-2 rounded-md">
+      <DialogTrigger className="bg-red-500 text-white p-2 rounded-md hover:bg-red-600">
         {label}
       </DialogTrigger>
       <DialogContent>
